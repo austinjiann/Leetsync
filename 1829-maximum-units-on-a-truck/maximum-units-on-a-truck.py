@@ -1,20 +1,15 @@
-
 class Solution:
     def maximumUnits(self, boxTypes: List[List[int]], truckSize: int) -> int:
-        rev = []
-        for i in range (len(boxTypes)):
-            rev.append([boxTypes[i][1],boxTypes[i][0]])
-        ans = 0
-        rev.sort()
-        
-        for i in range (truckSize):
-            if (len(rev)>0):
-                ans += rev[-1][0]
-                rev[-1][1] -= 1
-                if (rev[-1][1]) == 0:
-                    rev.pop()
-        return ans
+        # boxTypes[i] = [numBoxes, unitsPerBox]
+        boxTypes.sort(key=lambda x: x[1], reverse=True)  # highest units first
 
-        
-        
-        
+        units = 0
+        remaining = truckSize
+        for count, per_box in boxTypes:
+            if remaining == 0:
+                break
+            take = min(count, remaining)      # take as many as fit
+            units += take * per_box           # add in one shot
+            remaining -= take
+
+        return units
